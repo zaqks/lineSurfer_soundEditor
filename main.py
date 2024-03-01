@@ -1,13 +1,27 @@
 import pygame as pg
+from pygame import mixer
 
-DELAY = 3.5
-TRACK = "tracks/track.mp3"
+
+MTR = False
+
+TRACK = "tracks/track-[AudioTrimmer.com].mp3"
 BPM = 97
+MEASURES = 4
+# units
+
+rslt = ""
 
 
 def kill():
-    pg.mixer.stop()
+    mixer.stop()
     pg.quit()
+    # save the file before quitting
+
+    with open("out/out.txt", "w") as f:
+        f.write(rslt)
+        f.close()
+    print("data saved")
+
     exit()
 
 
@@ -15,16 +29,15 @@ pg.init()
 pg.display.set_mode(size=(800, 600)).fill((0, 0, 0))
 pg.display.flip()
 
-pg.mixer.init()
-pg.mixer.music.load(TRACK)
-pg.mixer.music.play(loops=1, start=DELAY)
+mixer.init()
+mixer.music.load(TRACK, "main")
+# mixer.music.load("sounds/tick.wav", "tick")
+
+mixer.Channel(0).play(pg.mixer.Sound(TRACK))
 
 
-TICKS = 100  # per sec
-bpm = 0
-avr = 0
-
-while pg.mixer.music.get_busy():
+one = False
+while True:
     # event capture
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -36,17 +49,20 @@ while pg.mixer.music.get_busy():
                 kill()
 
             #
-            if event.key == pg.K_SPACE:
-                # bmp = time between 2 beats is seconds
-                avr += 60/bpm
-                avr /= 2
-                print(
-                    f"BPM: {int(60/bpm)} AVR: {int(avr)} SYNC: {int(100*(1- min(bpm, avr)/max(bpm, avr) ))}%")
-                bpm = 0
+            one = event.key in [pg.K_f, pg.K_g, pg.K_h]
 
-    bpm += 1/TICKS
+    if one:
+        rslt += "1"
+    else:
+        rslt += "0"
+    one = False
+
     #
-    pg.time.Clock().tick(100)  # tick/s
+    if MTR:
+        mixer.Channel(1).play(pg.mixer.Sound("sounds/tick.wav"))
+
+    #
+    pg.time.Clock().tick(BPM*MEASURES/60)  # tick/s
 
 
 kill()

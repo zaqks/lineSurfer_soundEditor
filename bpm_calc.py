@@ -2,6 +2,7 @@ import pygame as pg
 
 DELAY = 3.5
 TRACK = "tracks/track.mp3"
+BPM = 97
 
 
 def kill():
