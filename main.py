@@ -37,6 +37,7 @@ mixer.Channel(0).play(pg.mixer.Sound(TRACK))
 
 
 one = False
+mes = 0
 while True:
     # event capture
     for event in pg.event.get():
@@ -56,6 +57,13 @@ while True:
     else:
         rslt += "0"
     one = False
+    
+    mes += 1
+    if mes >= MEASURES:
+        rslt += "|"
+        mes  = 0
+    
+        
 
     #
     if MTR:
