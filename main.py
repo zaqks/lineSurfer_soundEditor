@@ -4,8 +4,8 @@ from pygame import mixer
 
 MTR = False
 
-TRACK = "tracks/track-[AudioTrimmer.com].mp3"
-BPM = 97
+TRACK = "tracks/TSFHA.mp3"
+BPM = 79
 MEASURES = 4
 # units
 
